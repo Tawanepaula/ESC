@@ -1,0 +1,119 @@
+class Snake {
+
+    field int length;
+    field Array body;
+
+	// cria um objeto da clase snake
+	// tamanho inicial da snake
+    constructor Snake new() {
+    	let body = Array.new(30);
+
+	let body[0] = 70;
+	let body[1] = 70;
+
+	let body[2] = 71;
+	let body[3] = 70;
+
+	let body[4] = 72;
+	let body[5] = 70;
+	
+
+	let length = 3;
+
+	// elemento da cabeca e desenhando
+	do draw(getHeadX(), getHeadY(), true); // pega a posição da cabeca e varia 
+	return this;
+    }
+
+	// liberar memoria, toda classe que cria um construtor 
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+	//desenha a snake, verifica se a posição da cabeca esta dentro do limite da tela.
+	
+    method void draw(int X, int Y, boolean blackPixel) {
+	do Screen.setColor(blackPixel);
+	if ((X < 5) | (X > 500) | (Y < 5) | (Y > 245)) {
+	    do Output.printString("You died");
+	    do Sys.halt();
+	}
+
+	do Screen.drawPixel(X, Y);
+	return;
+    }
+
+	// direcao , apaga um pixel e escreve outro 
+    method void move (int direction) {
+    	var int i, lastX;
+    	let i = 0;
+	let lastX = (length - 1) * 2; 
+
+	do draw(body[0], body[1], false);
+	while (i < ((length * 2) - 2)) {
+		let body[i] = body[i + 2];
+		let body[i + 1] =  body[i + 3];
+		let i = i + 2;
+	}
+
+        if (direction = 1) {
+		let body[lastX + 1] = body[lastX + 1] - 1;
+        }
+        if (direction = 2) {
+		let body[lastX + 1] = body[lastX + 1] + 1;
+        }
+        if (direction = 3) {
+		let body[lastX] = (body[lastX] - 1);
+        }
+        if (direction = 4) {
+		let body[lastX] = (body[lastX] + 1);
+        }
+	do draw(getHeadX(), getHeadY(), true);
+
+	return;
+    }
+
+	// pega a posiçaõ da cabeca
+    method int getHeadX() {
+	return body[(length - 1) * 2];
+    }
+
+    method int getHeadY() {
+	return body[1 + ((length - 1) * 2)];
+    }
+
+    // verifica se passa do limite , se nao cresce 
+    method void grow(int direction) {
+    	var int nextX, lastX;
+
+	if (length = 10) {
+	    do Output.printString("You win");
+	    do Sys.halt();
+	}
+
+	let lastX = (length - 1) * 2; // cada pixel tem 2 atributos
+	let nextX = lastX + 2; // pq sao 2 novos atributos no body
+	let length = length + 1; // incremento o tamanho
+
+	if (direction = 1) {
+		let body[nextX] = body[lastX];
+		let body[nextX + 1] = body[lastX + 1] + 1;
+        }
+        if (direction = 2) {
+		let body[nextX] = body[lastX];
+		let body[nextX + 1] = body[lastX + 1] - 1;
+        }
+        if (direction = 3) {
+		let body[nextX] = body[lastX] + 1;
+		let body[nextX + 1] = body[lastX + 1];
+        }
+        if (direction = 4) {
+		let body[nextX] = body[lastX] - 1;
+		let body[nextX + 1] = body[lastX + 1];
+        }
+	do draw(getHeadX(), getHeadY(), true);
+
+	return;
+    }
+}
